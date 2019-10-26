@@ -7,9 +7,11 @@ module.exports = {
     module: {
         rules: [{
             test: /\.jsx?$/,
+            exclude: /node_modules/,
             include: /ui/,
-            use: {
-                loader: 'babel-loader'
+            loader: 'babel-loader',
+            query: {
+                presets: ['es2015', 'react']
             }
         }]
     }

@@ -11,7 +11,7 @@ class SunWeatherComponent extends React.Component {
             requests: null
         };
     }
-    render = () => {
+    render() {
         return <div>
             <div>sunrise time: {this.state.sunrise} </div>
             <div>sunset time: {this.state.sunset}</div>
@@ -19,7 +19,7 @@ class SunWeatherComponent extends React.Component {
             <div>requests: {this.state.requests}</div>
         </div>
     }
-    didComponentMount = () => {
+    componentDidMount() {
         axios.get('/data').then((response) => {
             const json = response.data
             this.setState({

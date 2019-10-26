@@ -23,24 +23,12 @@ class Application @Inject() (
   actorSystem: ActorSystem
   ) extends AbstractController(components) {
   
-  // def index = Action.async {
-  //   val latitude = 47.6062d
-  //   val longitude = -122.3321d
-  //   implicit val timeout = Timeout(5 seconds)
+  def index = Action.async {
+    Future.successful(Ok(views.html.index()))
+  }
 
-  //   val weatherFuture : Future[Double] = weatherService.getTemprature(latitude, longitude)
-  //   val sunFuture : Future[SunInfo] = sunService.getSunInfo(latitude, longitude)
-  //   val statsFuture : Future[Int] = (actorSystem.actorSelection(StatsActor.path) ? GetStats) .mapTo[Int]
-
-  //   for {
-  //     sunInfo <- sunFuture
-  //     temprature <- weatherFuture
-  //     stats <- statsFuture
-  //   } yield {
-  //       Ok(views.html.index(sunInfo, temprature, stats))
-  //   }
-  // }
   def versioned(path: String, file: Asset) = assets.versioned(path, file)
+  
   def data = Action.async {
     println("came inside data")
     val latitude = 47.6062d
