@@ -8,3 +8,6 @@ target
 /RUNNING_PID
 node_modules
 project/target
+.DS_Store
+public/.DS_Store
+ui/.DS_Store

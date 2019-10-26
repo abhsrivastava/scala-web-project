@@ -12,12 +12,26 @@ class SunWeatherComponent extends React.Component {
         };
     }
     render() {
-        return <div>
-            <div>sunrise time: {this.state.sunrise} </div>
-            <div>sunset time: {this.state.sunset}</div>
-            <div>current temprature: {this.state.temprature}</div>
-            <div>requests: {this.state.requests}</div>
-        </div>
+        return <table>
+            <tbody>
+                <tr>
+                    <td>Sunrise Time:</td>
+                    <td>{this.state.sunrise}</td>
+                </tr>
+                <tr>
+                    <td>Sunset Time:</td>
+                    <td>{this.state.sunset}</td>
+                </tr>
+                <tr>
+                    <td>Current Temprature:</td>
+                    <td>{this.state.temprature}</td>
+                </tr>
+                <tr>
+                    <td>Number of requests: </td>
+                    <td>{this.state.requests}</td>
+                </tr>
+            </tbody>
+        </table>
     }
     componentDidMount() {
         axios.get('/data').then((response) => {
