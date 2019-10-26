@@ -1,0 +1,14 @@
+@(sunInfo: SunInfo, temprature: Double, stats: Int)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <link rel="shortcut icon" type="image/png"
+           href="@routes.Application.versioned("images/favicon.png")">
+    </head>
+    <body>
+        <h1>Hello Play</h1>
+        <div id="reactview"></div>
+    </body>
+    <script src='@routes.Application.versioned("compiled/bundle.js")'></script>
+</html>
