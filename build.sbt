@@ -1,3 +1,5 @@
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 name := """scala-web-project"""
 version := "1.0-SNAPSHOT"
 scalaVersion := "2.12.8"
@@ -9,7 +11,8 @@ libraryDependencies ++= Seq(
   jdbc,
   caffeine,
   ws,
-  "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
+  "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided",
+  "de.svenkubiak" % "jBCrypt" % "0.4.1"
 )
 
 resolvers += "sonatype-snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
