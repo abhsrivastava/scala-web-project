@@ -27,6 +27,10 @@ class Application @Inject() (
     Future.successful(Ok(views.html.index()))
   }
 
+  def login = Action.async {
+    Future.successful(Ok(views.html.login()))
+  }
+
   def versioned(path: String, file: Asset) = assets.versioned(path, file)
   
   def data = Action.async {

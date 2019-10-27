@@ -14,6 +14,9 @@ import filters._
 import models._
 import akka.actor.Props
 import actors._
+import scalikejdbc.config.DBs
+import play.api.db.evolutions.EvolutionsComponents
+import play.api.db.{DBComponents, HikariCPComponents}
 
 class AppApplicationLoader extends ApplicationLoader {
     def load(context: Context) = {
@@ -23,9 +26,12 @@ class AppApplicationLoader extends ApplicationLoader {
 }
 
 class AppComponents(context: Context) extends BuiltInComponentsFromContext(context) 
-    with AhcWSComponents with AssetsComponents with HttpFiltersComponents {
+    with AhcWSComponents with EvolutionsComponents 
+    with DBComponents with HikariCPComponents 
+    with AssetsComponents with HttpFiltersComponents {
         private val log = Logger(this.getClass)
         lazy val statsActor = actorSystem.actorOf(Props(wire[StatsActor]), StatsActor.name)
+        //lazy val dynamicEvolutions = new DynamicEvolutions
 
         val onStart = {
             log.info("""  __  __        __          __             _            __       _                        _ _           _   _             """)
@@ -37,6 +43,8 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
             log.info("""          __/ |                                                              | |   | |                                    """)
             log.info("""         |___/                                                               |_|   |_|                                    """)
             statsActor ! Ping
+            applicationEvolutions
+            DBs.setupAll()
         }
 
         applicationLifecycle.addStopHook{() => 
@@ -48,6 +56,7 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
             log.info(""" |____/ \__, |\___| |____/ \__, |\___|""")
             log.info("""         __/ |              __/ |     """)
             log.info("""        |___/              |___/      """)
+            DBs.closeAll()
             Future.successful(Unit)
         }
         
