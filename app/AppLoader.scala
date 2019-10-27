@@ -43,8 +43,8 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
             log.info("""          __/ |                                                              | |   | |                                    """)
             log.info("""         |___/                                                               |_|   |_|                                    """)
             statsActor ! Ping
-            applicationEvolutions
             DBs.setupAll()
+            applicationEvolutions
         }
 
         applicationLifecycle.addStopHook{() => 
