@@ -8,7 +8,7 @@ import play.api.routing.Router
 import com.softwaremill.macwire._
 import _root_.controllers.AssetsComponents
 import play.filters.HttpFiltersComponents
-import services.{SunService, WeatherService}
+import services._
 import scala.concurrent.Future
 import filters._
 import models._
@@ -17,6 +17,8 @@ import actors._
 import scalikejdbc.config.DBs
 import play.api.db.evolutions.EvolutionsComponents
 import play.api.db.{DBComponents, HikariCPComponents}
+import play.api.cache.caffeine.CaffeineCacheComponents
+import actions._
 
 class AppApplicationLoader extends ApplicationLoader {
     def load(context: Context) = {
@@ -28,7 +30,8 @@ class AppApplicationLoader extends ApplicationLoader {
 class AppComponents(context: Context) extends BuiltInComponentsFromContext(context) 
     with AhcWSComponents with EvolutionsComponents 
     with DBComponents with HikariCPComponents 
-    with AssetsComponents with HttpFiltersComponents {
+    with AssetsComponents with CaffeineCacheComponents 
+    with HttpFiltersComponents {
         private val log = Logger(this.getClass)
         lazy val statsActor = actorSystem.actorOf(Props(wire[StatsActor]), StatsActor.name)
         //lazy val dynamicEvolutions = new DynamicEvolutions
@@ -61,6 +64,8 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
         }
         
         override lazy val controllerComponents = wire[DefaultControllerComponents]
+        lazy val userAuthAction = wire[UserAuthAction]
+        lazy val authService = new AuthService(defaultCacheApi.sync)
         lazy val sunService = wire[SunService]
         lazy val weatherService = wire[WeatherService]
         lazy val statsFilter: Filter = wire[StatsFilter]

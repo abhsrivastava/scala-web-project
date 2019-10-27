@@ -14,21 +14,33 @@ import akka.pattern.ask
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
 import play.api.libs.json.Json
+import play.api.data.Form
+import play.api.data.Forms._
+import actions._
 
 class Application @Inject() (
   components: ControllerComponents, 
   assets: Assets, 
   sunService: SunService,
   weatherService: WeatherService,
+  authService: AuthService,
+  userAuthAction: UserAuthAction,
   actorSystem: ActorSystem
   ) extends AbstractController(components) {
   
-  def index = Action.async {
-    Future.successful(Ok(views.html.index()))
+  val userDataForm = Form {
+    mapping(
+      "username" -> nonEmptyText,
+      "password" -> nonEmptyText
+    )(UserLoginData.apply)(UserLoginData.unapply)
+  }
+
+  def index = userAuthAction { userAuthRequest =>
+    Ok(views.html.index(userAuthRequest.user))
   }
 
   def login = Action.async {
-    Future.successful(Ok(views.html.login()))
+    Future.successful(Ok(views.html.login(None)))
   }
 
   def versioned(path: String, file: Asset) = assets.versioned(path, file)
@@ -48,5 +60,17 @@ class Application @Inject() (
     } yield {
       Ok(Json.toJson(CombinedData(sunInfo, temprature, requests)))
     }
+  }
+
+  def postLogin = Action.async { implicit request =>
+    userDataForm.bindFromRequest.fold(
+      formWithErrors => Future.successful(Ok(views.html.login(Some("wrong data")))),
+      userData => {
+        authService.login(userData.username, userData.password) match{
+          case Some(cookie) => Future.successful(Redirect("/").withCookies(cookie))
+          case None => Future.successful(Ok(views.html.login(Some("login failed"))))
+        }
+      }
+    )
   }
 }

@@ -1,4 +1,5 @@
-@()
+@(maybeErrorMessage:Option[String])
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,6 +12,9 @@
             <form action='/login' method='post'>
                 <fieldset>
                     <legend>login</legend>
+                    @maybeErrorMessage.map{errorMessage => 
+                        <span class='label bg--error'>@errorMessage</span>
+                    }
                     <p>
                         <label for='username'>Username:</label>
                         <input id='username' type='text' name='username' />

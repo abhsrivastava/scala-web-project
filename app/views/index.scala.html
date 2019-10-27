@@ -1,4 +1,4 @@
-@()
+@(user: models.User)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -8,6 +8,8 @@
     </head>
     <body>
         <h1>Hello Play</h1>
+        <div>Your id is @user.uuid</div>
+        <div>Your code is @user.userCode</div>
         <div id="reactview"></div>
     </body>
     <script src='@routes.Application.versioned("compiled/bundle.js")'></script>
