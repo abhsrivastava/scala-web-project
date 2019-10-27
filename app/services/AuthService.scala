@@ -29,7 +29,7 @@ class AuthService(cacheApi: SyncCacheApi) {
     
     def checkUser(userCode: String, password: String) : Option[User] = {
         val mayBeUser = DB.readOnly{implicit session => 
-            sql"""select * from user where user_code=$userCode""".map(User.fromRS).single().apply()
+            sql"""select * from users where user_code=$userCode""".map(User.fromRS).single().apply()
         }
         mayBeUser.flatMap{user => 
             if (BCrypt.checkpw(password, user.password)) {Some(user)} else None
