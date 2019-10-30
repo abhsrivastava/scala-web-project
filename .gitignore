@@ -11,3 +11,4 @@ project/target
 .DS_Store
 public/.DS_Store
 ui/.DS_Store
+package-lock.json
